@@ -11,7 +11,7 @@ class NodoDoble
 		void presentarInicio();
 		void presentarFinal();
 		void llenar();
-		void buscar(int);
+		int buscar(int);
 		void modificar(int);
 		void eliminar(int);
 };

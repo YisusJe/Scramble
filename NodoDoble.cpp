@@ -37,7 +37,7 @@ void NodoDoble::presentarFinal(){
 	}
 }
 
-void NodoDoble::buscar(int x){
+int NodoDoble::buscar(int x){
 	bool ward = false;
 	if(x>(fin->val/2)){
 		cout<<"por fin"<<endl;
@@ -46,6 +46,7 @@ void NodoDoble::buscar(int x){
 			if(aux->val==x){
 				ward = true;
 				cout<<"Registro encontrado"<<endl;
+				return x;
 			}
 			else {
 				aux = aux->ant;
@@ -58,6 +59,7 @@ void NodoDoble::buscar(int x){
 			if(aux->val==x){
 				ward = true;
 				cout<<"Registro encontrado"<<endl;
+				return x;
 			}
 			else {
 				aux = aux->sig;

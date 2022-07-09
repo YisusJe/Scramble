@@ -1,9 +1,41 @@
 #include <iostream>
-#include "NodoDoble.h"
+#include<stdlib.h>
+#include<time.h>
+
+#include "NodoDoble.cpp"
 #include "Bicolas.h"
 using namespace std;
 
+NodoDoble * chars;
+
+int sacarFicha(){ // generar numero random entre 97 y 122
+	bool ward = true;
+	int x;
+	while (ward) { // ciclo de buscar numeros, en caso de encontrarlo -> eliminarlo, si no seguir buscando numeros
+		x = 97+rand()%(123-97);
+		cout<<(char)chars->buscar(x)<<endl; 
+		if(x){ 
+			chars->eliminar(x);
+			ward = false;
+		}
+	}
+	return x;
+}
+
 int main(int argc, char** argv) {
+	int cont = 0;
+	for(int i = 97; i <= 122; i++){
+		for(int j = 0; j < 5; j++){
+			chars->agregar(i);
+		}
+	}
+
+	for (int i = 0; i < 10; i++){ //simulacion de sacar 10 fichas
+		sacarFicha();
+	}
+
+	chars->presentarInicio();
+
 	enum opciones{ salir, insertIzq, insertDer, eliminaIzq, eliminaDer, impIzq, impDer, impTodos, quedanNodos, cuantosNodosHay, copiaBicola, sonBicolasIguales, borraBicola } opc;
 	struct BICOLA *bicolaA;
 	struct BICOLA *bicolaB;
