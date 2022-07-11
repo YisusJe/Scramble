@@ -1,12 +1,197 @@
 #include <iostream>
-#include<stdlib.h>
-#include<time.h>
-
-#include "NodoDoble.cpp"
+#include <stdlib.h>
+#include <time.h>
+#include <conio.h>
+#include "NodoDoble.h"
 #include "Bicolas.h"
+#include "Jugador.h"
+
 using namespace std;
 
 NodoDoble * chars;
+void Juego();
+int sacarFicha();
+struct BICOLA *bicolaA;
+struct BICOLA *bicolaB;
+
+void menu(){
+	cout<<"Presione 1 para jugar"<<endl;
+	cout<<"Presione 2 para salir"<<endl;
+	bool ward = true;
+	while(ward){
+		if(kbhit()){
+			char key = getch();
+			switch(int(key)){
+				case 49:
+					system("cls");
+					Juego();
+					break;
+				case 50:
+					ward = false;
+					break;
+			}
+		}
+	}
+}
+
+void mostrarLetras(int * fichas){
+	cout<<"Tus letras: ";
+	for(int i = 0; i<10; i++){
+		if(fichas[i] != 0){
+			cout<<(char)fichas[i]<<" ";
+		}
+	}
+}
+
+bool comprobarFichaDeUsuario (Jugador jugador, char letra){
+	int * fichas = jugador.getFichas();
+	for(int i = 0; i < 10; i++){
+		if(char(fichas[i]) == letra){ // si existe en el mazo del usuario
+			return false;
+		}
+	}
+	cout<<"Letra no encontrada"<<endl;
+	return true;
+}
+
+void insertarFicha(Jugador jugador){
+	bool ward = true;
+	char letra;
+	while(ward){
+		cout<<endl<<"Que letra desea insertar"<<endl;
+		fflush(stdin);
+		cin>>letra;
+		ward = comprobarFichaDeUsuario(jugador, letra);
+	}
+	//insertar ahora ficha en el tablero del jugador
+	jugador.eliminarFicha((int)letra);
+	int op;
+	cout << "Donde colocare su Letra:" << endl;
+	cout << "1.Al Inicio" << endl;
+	cout << "2.Al Final" << endl;
+	cin>>op;
+	if(jugador.getID() == 1){
+		if( op == 1){
+			insertIzqBicola( &bicolaA, (int)letra);
+		}else if(op == 2){
+			insertDerBicola( &bicolaA, (int)letra);
+		}
+	}else if(jugador.getID() == 2){
+		if( op == 1){
+			insertIzqBicola( &bicolaB, (int)letra);
+		}else if(op == 2){
+			insertDerBicola( &bicolaB, (int)letra);
+		}
+		
+	}
+}
+
+void Recuento(Jugador jugador, Jugador rival){
+	cout<<"Puntuacion de "<<jugador.getName()<<" -> "<<jugador.getPuntuacion();
+	cout<<"Puntuacion de "<<jugador.getName()<<" -> "<<rival.getPuntuacion();
+	if(jugador.getPuntuacion() > rival.getPuntuacion()){
+		cout<<"El jugador "<<jugador.getName()<<" Ha ganado!"<<endl;
+	} else if(jugador.getPuntuacion() < rival.getPuntuacion()){
+		cout<<"El jugador "<<rival.getName()<<" Ha ganado!"<<endl;
+	} else {
+		cout<<"Empate!"<<endl;
+	}
+	cout<<"Fin del juego"<<endl;
+}
+
+void hacerAcuerdo(Jugador jugador, Jugador rival){
+	bool ward = true;
+	cout<<rival.getName()<<" quieres terminar la partida?"<<endl;
+	cout<<"1- Si, 2- No"<<endl;
+	while(ward){
+		if(kbhit()){
+			char key = getch();
+			switch(int(key)){
+				case 49:
+					cout<<"Juego Terminado"<<endl;
+					Recuento(jugador,rival);
+					break;
+				case 50:
+					cout<<"Acuerdo rechazado"<<endl;
+					ward = false;
+					system("pause");
+					break;
+			}
+		}
+	}
+}
+
+void menuUsuario(Jugador jugador, Jugador rival){
+	bool ward = true;
+	// mostrar los tableros de cada jugador
+		system("cls") ;
+		cout<<"Tablero de: "<<jugador.getName()<<"  ";
+		if(jugador.getID() == 1){
+			imprimeBicola( &bicolaA );
+		} else {
+			imprimeBicola( &bicolaB );
+		}
+		cout<<"\t\t\t\t";
+		cout<<"Tablero de: "<<rival.getName()<<"  ";
+		if(rival.getID() == 1){
+			imprimeBicola( &bicolaA );
+		} else {
+			imprimeBicola( &bicolaB );
+		}
+		
+		cout<<"\n\n\n\n"<<endl;
+		cout<<"Turno del jugador: "<<jugador.getName()<<" /// que desea hacer?"<<endl;
+		cout<<"1- Insertar letra"<<endl;
+		cout<<"2- Hacer acuerdo de detener partida"<<endl;
+		cout<<"3- Retirarse"<<endl;
+	while(ward){	    
+		
+		if(kbhit()){
+			char key = getch();
+			switch(int(key)){
+				case 49:
+					mostrarLetras(jugador.getFichas());
+					insertarFicha(jugador);
+					ward = false;
+					break;
+				case 50:
+					hacerAcuerdo(jugador,rival);
+					break;
+				case 51:
+					cout<<"El jugador "<<jugador.getName()<<" se ha rendido"<<endl;
+					break;
+			}
+		}
+	}
+}
+
+void Juego(){
+	char nom1[20], nom2[20];
+	int fichas1[10], fichas2[10], *aux, turno = 1;
+	bool empatar = false;
+	cout<<"Ingrese el nombre del jugador 1"<<endl;
+	cin.getline(nom1, 20);
+	fflush(stdin);
+	cout<<"Ingrese el nombre del jugador 2"<<endl;
+	cin.getline(nom2, 20);
+	fflush(stdin);
+	for(int i=0;i<10;i++){
+		fichas1[i] = sacarFicha();
+	}
+	for(int i=0;i<10;i++){
+		fichas2[i] = sacarFicha();
+	}
+	Jugador jugador1(1, nom1, fichas1), jugador2(2, nom2, fichas2);
+	while(true){
+		if(turno == 1){
+			menuUsuario(jugador1, jugador2);
+			turno = 2;
+		} else {
+			menuUsuario(jugador2, jugador1);
+			turno = 1;
+		}
+	}
+}
 
 int sacarFicha(){ // generar numero random entre 97 y 122
 	bool ward = true;
@@ -29,159 +214,9 @@ int main(int argc, char** argv) {
 			chars->agregar(i);
 		}
 	}
-
-	for (int i = 0; i < 10; i++){ //simulacion de sacar 10 fichas
-		sacarFicha();
-	}
-
-	chars->presentarInicio();
-
-	enum opciones{ salir, insertIzq, insertDer, eliminaIzq, eliminaDer, impIzq, impDer, impTodos, quedanNodos, cuantosNodosHay, copiaBicola, sonBicolasIguales, borraBicola } opc;
-	struct BICOLA *bicolaA;
-	struct BICOLA *bicolaB;
-	int eleccion, nuevoDato;
-
-
-	// Se inicializan las dos Bicolas poniéndolas a NULL:
 	inicializarBicola( &bicolaA );
 	inicializarBicola( &bicolaB );
 
-
-
-	// Menú de selección:
-	do{
-		printf( "\n\n" );
-		printf( "Indique que desea hacer con los Nodos de la Bicola:\n\n" );
-		printf( "   1. Añadir un Nodo por la izquierda\n" );
-		printf( "   2. Añadir un Nodo por la derecha\n" );
-		printf( "   3. Eliminar el primer Nodo\n" );
-		printf( "   4. Eliminar el ultimo Nodo\n" );
-		printf( "   5. Mostrar el primer Nodo\n" );
-		printf( "   6. Mostrar el ultimo Nodo\n" );
-		printf( "   7. Muestra todos los Nodos\n" );
-		printf( "   8. Quedan Nodos?\n" );
-		printf( "   9. Cuantos Nodos hay?\n" );
-		printf( "  10. Copiar BicolaA a una nueva BicolaB\n" );
-		printf( "  11. BicolaA es igual que BicolaB?\n" );
-		printf( "  12. Borrar la BicolaA\n\n" );
-		printf( "   0. Salir del programa.\n" );
-
-
-		do{
-			scanf( "%i", &eleccion );
-		} while( eleccion < 0  &&  eleccion > 12 );
-		opc = (enum opciones)(eleccion);
-
-
-		printf( "\n\n" );
-
-
-		switch( opc )
-		{
-
-
-			case insertIzq:
-				printf( "Introduzca el número entero que contendrá el nuevo Nodo de la Bicola: " );
-				scanf( "%i", &nuevoDato );
-				insertIzqBicola( &bicolaA, nuevoDato );
-			break;
-
-
-
-			case insertDer:
-				printf( "Introduzca el número entero que contendrá el nuevo Nodo de la Bicola: " );
-				scanf( "%i", &nuevoDato );
-				insertDerBicola( &bicolaA, nuevoDato);
-			break;
-
-
-
-			case eliminaIzq:
-				eliminaIzqBicola( &bicolaA );
-			break;
-
-
-
-			case eliminaDer:
-				eliminaDerBicola( &bicolaA );
-			break;
-
-
-
-			case impIzq:
-				if( tieneNodosLaBicola( &bicolaA ) )
-					printf( "El primer Nodo contiene un: %i\n", bicolaA->primero->elemento.num );
-				else
-					printf("La Bicola no contiene Nodos");
-			break;
-
-
-
-			case impDer:
-				if( tieneNodosLaBicola( &bicolaA ) )
-					printf( "El ultimo Nodo contiene un: %i\n", bicolaA->ultimo->elemento.num );
-				else
-					printf("La Bicola no contiene Nodos");
-			break;
-
-
-
-			case impTodos:
-				imprimeBicola( &bicolaA );
-			break;
-
-
-
-			case quedanNodos:
-				if( tieneNodosLaBicola( &bicolaA ) )
-					printf( "La Bicola contiene Nodos." );
-				else
-					printf( "La Bicola esta vacía." );
-
-			break;
-
-
-
-			case cuantosNodosHay:
-				printf( "La Bicola contiene %i Nodos.",  cuantosNodosTieneLaBicola( &bicolaA ) );
-			break;
-
-
-
-			case copiaBicola:
-				copiarLaBicola( &bicolaA, &bicolaB );
-			break;
-
-
-
-			case sonBicolasIguales:
-				if( sonIgualesLasBicolas( &bicolaA, &bicolaB ) )
-					printf( "Las Bicolas son idénticas" );
-				else
-					printf( "Las Bicolas son diferentes" );
-			break;
-
-
-
-			case borraBicola:
-				borraLaBicola( &bicolaA );		// Se borran todos los nodos...
-				inicializarBicola( &bicolaA );	// ... y después se inicializa.
-			break;
-
-
-
-			case salir:
-				system("clear");
-			break;
-
-		};
-
-
-	} while( opc != salir );
-
-
-	// Libera la RAM que pudiera quedar sin liberar:
-	borraLaBicola( &bicolaA );
-	borraLaBicola( &bicolaB );
+	menu();
 	return 0;
 }

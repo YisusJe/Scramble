@@ -4,6 +4,9 @@
 class NodoDoble
 {
 	public: 
+		NodoDoble(){
+			
+		}
 		int val;
 		NodoDoble *sig;
 		NodoDoble *ant;

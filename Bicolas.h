@@ -401,19 +401,19 @@ void imprimeBicola( struct BICOLA **bicola )
 
 
 	if( bic == NULL )
-		printf( "La Bicola no contiene Nodos." );
+		// printf( "La Bicola no contiene Nodos." );
+		printf("");
 	else
 	{
 
-		printf( "Su Bicola contiene: " );
+		// printf( "Su Bicola contiene: " );
 
 		while( bic != NULL )
 		{
-			printf(" %i, ", bic->elemento.num);
+			printf("%c", bic->elemento.num);
 			bic = bic->p_siguiente;
 		};
 
-		printf( "\n\n" );
 
 	};
 
