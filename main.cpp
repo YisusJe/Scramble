@@ -13,6 +13,8 @@ using namespace std;
 NodoDoble * chars;
 void Juego();
 int sacarFicha();
+int marcador1;
+int marcadar2;
 struct BICOLA *bicolaA;
 struct BICOLA *bicolaB;
 
@@ -35,28 +37,31 @@ void menu(){
 		}
 	}
 }
-void comprobarLetras(){
+void comprobarLetras(Jugador jugador){
 	Diccionario di;
 	vector<char> letrasA,letrasB;
 	
 	letrasA = getLetras(&bicolaA);
 	letrasB = getLetras(&bicolaB);
+	
 	char palabra1[letrasA.size()];
 	char palabra2[letrasB.size()];
 	
-	for(int i=0; i < letrasA.size(); i++){
-		palabra1[i] = letrasA.at(i);
-	}
-	for(int j=0; j < letrasB.size(); j++){
-		palabra2[j] = letrasB.at(j);
-	}
+	if(letrasA.size() > 0)
+	for(int i=0; i < letrasA.size(); i++){	palabra1[i] = letrasA.at(i); }
+	
+	if(letrasB.size() > 0)
+	for(int j=0; j < letrasB.size(); j++){	palabra2[j] = letrasB.at(j); }
 	
 	cout << palabra1 << endl;
 	cout << palabra2 << endl;
 	const char *palabraFinal1 = palabra1;
 	const char *palabraFinal2 = palabra2;
-	di.buscar(palabraFinal1);
-	di.buscar(palabraFinal2);
+	if(di.buscar(palabraFinal1)){
+		marcador1 += letrasA.size();
+	}else if(di.buscar(palabraFinal2)){
+		marcador2 += letrasB.size();
+	}
 	system("PAUSE");	
 }
 void mostrarLetras(int * fichas){
@@ -164,6 +169,10 @@ void menuUsuario(Jugador jugador, Jugador rival){
 		} else {
 			imprimeBicola( &bicolaB );
 		}
+		cout << endl;
+		cout<<"Puntuacion de "<<jugador.getName()<<" -> "<<jugador.getPuntuacion();
+		cout<<"\t\t\t\t";
+		cout<<"Puntuacion de "<<rival.getName()<<" -> "<<rival.getPuntuacion();
 		
 		cout<<"\n\n\n\n"<<endl;
 		cout<<"Turno del jugador: "<<jugador.getName()<<" /// que desea hacer?"<<endl;
@@ -178,7 +187,7 @@ void menuUsuario(Jugador jugador, Jugador rival){
 				case 49:
 					mostrarLetras(jugador.getFichas());
 					insertarFicha(jugador);
-					comprobarLetras();
+					comprobarLetras(jugador);
 					ward = false;
 					break;
 				case 50:

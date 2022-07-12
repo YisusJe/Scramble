@@ -9,5 +9,5 @@ class Diccionario{
 		vector<const char*> palabras;
 	public:
 		Diccionario();
-		void buscar(const char* palabra);
+		bool buscar(const char* palabra);
 };
