@@ -28,7 +28,7 @@ class Jugador{
         }
         void eliminarFicha(int letra){
         	for(int i = 0; i<10; i++){
-        		cout<<fichas[i]<<" y "<<letra<<endl;
+//        		cout<<fichas[i]<<" y "<<letra<<endl;
         		if(letra == fichas[i]){
         			fichas[i]=0;
         			break;

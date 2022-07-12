@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <conio.h>
+#include <cstdlib>
 #include "NodoDoble.h"
 #include "Bicolas.h"
 #include "Jugador.h"
+#include "Diccionario.h"
 
 using namespace std;
 
@@ -33,7 +35,30 @@ void menu(){
 		}
 	}
 }
-
+void comprobarLetras(){
+	Diccionario di;
+	vector<char> letrasA,letrasB;
+	
+	letrasA = getLetras(&bicolaA);
+	letrasB = getLetras(&bicolaB);
+	char palabra1[letrasA.size()];
+	char palabra2[letrasB.size()];
+	
+	for(int i=0; i < letrasA.size(); i++){
+		palabra1[i] = letrasA.at(i);
+	}
+	for(int j=0; j < letrasB.size(); j++){
+		palabra2[j] = letrasB.at(j);
+	}
+	
+	cout << palabra1 << endl;
+	cout << palabra2 << endl;
+	const char *palabraFinal1 = palabra1;
+	const char *palabraFinal2 = palabra2;
+	di.buscar(palabraFinal1);
+	di.buscar(palabraFinal2);
+	system("PAUSE");	
+}
 void mostrarLetras(int * fichas){
 	cout<<"Tus letras: ";
 	for(int i = 0; i<10; i++){
@@ -66,7 +91,7 @@ void insertarFicha(Jugador jugador){
 	//insertar ahora ficha en el tablero del jugador
 	jugador.eliminarFicha((int)letra);
 	int op;
-	cout << "Donde colocare su Letra:" << endl;
+	cout << "Donde colocara su Letra:" << endl;
 	cout << "1.Al Inicio" << endl;
 	cout << "2.Al Final" << endl;
 	cin>>op;
@@ -135,6 +160,7 @@ void menuUsuario(Jugador jugador, Jugador rival){
 		cout<<"Tablero de: "<<rival.getName()<<"  ";
 		if(rival.getID() == 1){
 			imprimeBicola( &bicolaA );
+			
 		} else {
 			imprimeBicola( &bicolaB );
 		}
@@ -152,6 +178,7 @@ void menuUsuario(Jugador jugador, Jugador rival){
 				case 49:
 					mostrarLetras(jugador.getFichas());
 					insertarFicha(jugador);
+					comprobarLetras();
 					ward = false;
 					break;
 				case 50:
@@ -207,7 +234,9 @@ int sacarFicha(){ // generar numero random entre 97 y 122
 	return x;
 }
 
+
 int main(int argc, char** argv) {
+	
 	int cont = 0;
 	for(int i = 97; i <= 122; i++){
 		for(int j = 0; j < 5; j++){
