@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
+#include <vector>
 
 using namespace std;
 
@@ -222,8 +224,6 @@ int tieneNodosLaBicola( struct BICOLA **bicola )
 	Poscondici�n:
 					Se devuelve un par�metro de tipo entero con valores true 1 o false 0 dependiendo de si la Bicola contiene Nodos o no.
 	*/
-
-
 	int resp = 0;
 
 	if( (*bicola)->nodos != 0 )
@@ -243,8 +243,6 @@ void borraLaBicola( struct BICOLA **bicola )
 	Poscondici�n:
 					Se libera la RAM usada por los Nodos contenidos en la Bicola.
 	*/
-
-
 	struct NODO *actual, *siguiente;
 	actual = (*bicola)->primero;
 
@@ -388,37 +386,44 @@ int sonIgualesLasBicolas( struct BICOLA **bicolaA, struct BICOLA **bicolaB )
 // imprime por pantalla el contenido de todos los Nodos de la Bicola:
 void imprimeBicola( struct BICOLA **bicola )
 {
-	/*
-	Precondici�n:
-					Se recibe un doble puntero de tipo struct BICOLA a una Bicola.
-	Poscondici�n:
-					Se imprime por pantalla el contenido de todos los Nodos.
-	*/
-
-
 	struct NODO *bic = (*bicola)->primero;
-
-
 
 	if( bic == NULL )
 		// printf( "La Bicola no contiene Nodos." );
 		printf("");
 	else
 	{
-
 		// printf( "Su Bicola contiene: " );
-
 		while( bic != NULL )
 		{
-			printf("%c", bic->elemento.num);
+			char letra = bic->elemento.num;
+			cout << letra ;
 			bic = bic->p_siguiente;
 		};
-
-
 	};
 
 };
 
+vector<char> getLetras( struct BICOLA **bicola )
+{
+	vector<char> letras;
+	struct NODO *bic = (*bicola)->primero;
 
-void verificarPalabraPalindromo (){
-}
+	if( bic == NULL )
+		// printf( "La Bicola no contiene Nodos." );
+		printf("");
+	else
+	{
+		// printf( "Su Bicola contiene: " );
+		while( bic != NULL )
+		{
+			char letra = bic->elemento.num;
+			letras.push_back(letra);
+			bic = bic->p_siguiente;
+		};
+	};
+
+	return letras;
+
+};
+

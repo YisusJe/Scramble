@@ -35,4 +35,7 @@ class Jugador{
 				}
 			}
         }
+        void addPuntos(int puntos){
+        	this->puntos += puntos;
+		}
 };
