@@ -55,22 +55,18 @@ void sacarLetras (int userId){
 					if(userId == 1){
 						element = eliminaIzqBicola( &bicolaA );
 						jugador1.aniadirFicha(element);
-						cout<<"element"<<element;	
 					} else {
 						element = eliminaIzqBicola( &bicolaB );
 						jugador2.aniadirFicha(element);
-						cout<<"element"<<element;
 					}
 					break;
 				case 50:
 					if(userId == 1){
 						element = eliminaDerBicola( &bicolaA );
 						jugador1.aniadirFicha(element);
-						cout<<"element"<<element;	
 					} else {
 						element = eliminaDerBicola( &bicolaB );
 						jugador2.aniadirFicha(element);
-						cout<<"element"<<element;
 					}
 					break;
 				case 51:
