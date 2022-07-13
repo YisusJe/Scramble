@@ -13,8 +13,9 @@ using namespace std;
 NodoDoble * chars;
 void Juego();
 int sacarFicha();
+Jugador jugador1(1), jugador2(2);
 int marcador1;
-int marcadar2;
+int marcador2;
 struct BICOLA *bicolaA;
 struct BICOLA *bicolaB;
 
@@ -37,7 +38,7 @@ void menu(){
 		}
 	}
 }
-void comprobarLetras(Jugador jugador){
+void comprobarLetras(){
 	Diccionario di;
 	vector<char> letrasA,letrasB;
 	
@@ -58,23 +59,35 @@ void comprobarLetras(Jugador jugador){
 	const char *palabraFinal1 = palabra1;
 	const char *palabraFinal2 = palabra2;
 	if(di.buscar(palabraFinal1)){
-		marcador1 += letrasA.size();
+		jugador1.addPuntos(letrasA.size());
 	}else if(di.buscar(palabraFinal2)){
-		marcador2 += letrasB.size();
+		jugador2.addPuntos(letrasB.size());
 	}
 	system("PAUSE");	
 }
 void mostrarLetras(int * fichas){
 	cout<<"Tus letras: ";
 	for(int i = 0; i<10; i++){
-		if(fichas[i] != 0){
-			cout<<(char)fichas[i]<<" ";
+		if(fichas[i] != 1){
+			cout<<(char)fichas[i]<<" | ";
 		}
 	}
 }
 
 bool comprobarFichaDeUsuario (Jugador jugador, char letra){
 	int * fichas = jugador.getFichas();
+	int i=0;
+	bool confirmacion = true;
+	do{
+		if(fichas[i] != 1){
+			confirmacion = false;
+		}
+		i++;
+	}while(i < 10 && confirmacion);
+	
+	if(confirmacion == true){
+		
+	}
 	for(int i = 0; i < 10; i++){
 		if(char(fichas[i]) == letra){ // si existe en el mazo del usuario
 			return false;
@@ -94,7 +107,8 @@ void insertarFicha(Jugador jugador){
 		ward = comprobarFichaDeUsuario(jugador, letra);
 	}
 	//insertar ahora ficha en el tablero del jugador
-	jugador.eliminarFicha((int)letra);
+	(jugador.getID() == 1)? jugador1.eliminarFicha((int)letra): jugador2.eliminarFicha((int)letra);
+	
 	int op;
 	cout << "Donde colocara su Letra:" << endl;
 	cout << "1.Al Inicio" << endl;
@@ -151,31 +165,27 @@ void hacerAcuerdo(Jugador jugador, Jugador rival){
 	}
 }
 
-void menuUsuario(Jugador jugador, Jugador rival){
+void menuUsuario(int turno){
 	bool ward = true;
 	// mostrar los tableros de cada jugador
 		system("cls") ;
-		cout<<"Tablero de: "<<jugador.getName()<<"  ";
-		if(jugador.getID() == 1){
+		cout<<"Tablero de: "<<jugador1.getName()<<"  ";
+		if(jugador1.getID() == 1){
 			imprimeBicola( &bicolaA );
-		} else {
-			imprimeBicola( &bicolaB );
 		}
 		cout<<"\t\t\t\t";
-		cout<<"Tablero de: "<<rival.getName()<<"  ";
-		if(rival.getID() == 1){
-			imprimeBicola( &bicolaA );
-			
-		} else {
-			imprimeBicola( &bicolaB );
+		cout<<"Tablero de: "<<jugador2.getName()<<"  ";
+		if(jugador2.getID() == 2){
+			imprimeBicola( &bicolaB );	
 		}
 		cout << endl;
-		cout<<"Puntuacion de "<<jugador.getName()<<" -> "<<jugador.getPuntuacion();
+		cout<<"Puntuacion de "<<jugador1.getName()<<" -> "<<jugador1.getPuntuacion();
 		cout<<"\t\t\t\t";
-		cout<<"Puntuacion de "<<rival.getName()<<" -> "<<rival.getPuntuacion();
+		cout<<"Puntuacion de "<<jugador2.getName()<<" -> "<<jugador2.getPuntuacion();
 		
 		cout<<"\n\n\n\n"<<endl;
-		cout<<"Turno del jugador: "<<jugador.getName()<<" /// que desea hacer?"<<endl;
+		string texto = (turno == 1)?jugador1.getName(): jugador2.getName();
+		cout<<"Turno del jugador: "<< texto <<" /// que desea hacer?"<<endl;
 		cout<<"1- Insertar letra"<<endl;
 		cout<<"2- Hacer acuerdo de detener partida"<<endl;
 		cout<<"3- Retirarse"<<endl;
@@ -185,16 +195,23 @@ void menuUsuario(Jugador jugador, Jugador rival){
 			char key = getch();
 			switch(int(key)){
 				case 49:
-					mostrarLetras(jugador.getFichas());
-					insertarFicha(jugador);
-					comprobarLetras(jugador);
+					if(turno == 1){
+						mostrarLetras(jugador1.getFichas());
+						insertarFicha(jugador1);
+						comprobarLetras();
+					}else {
+						mostrarLetras(jugador2.getFichas());
+						insertarFicha(jugador2);
+						comprobarLetras();	
+					}
 					ward = false;
 					break;
 				case 50:
-					hacerAcuerdo(jugador,rival);
+					hacerAcuerdo(jugador1,jugador2);
 					break;
 				case 51:
-					cout<<"El jugador "<<jugador.getName()<<" se ha rendido"<<endl;
+					cout<<"El jugador "<<(turno == 1)?jugador1.getName(): jugador2.getName();
+					cout <<" se ha rendido"<<endl;
 					break;
 			}
 		}
@@ -203,7 +220,7 @@ void menuUsuario(Jugador jugador, Jugador rival){
 
 void Juego(){
 	char nom1[20], nom2[20];
-	int fichas1[10], fichas2[10], *aux, turno = 1;
+	int fichas1[10], fichas2[10], *aux, turno = 2;
 	bool empatar = false;
 	cout<<"Ingrese el nombre del jugador 1"<<endl;
 	cin.getline(nom1, 20);
@@ -217,15 +234,20 @@ void Juego(){
 	for(int i=0;i<10;i++){
 		fichas2[i] = sacarFicha();
 	}
-	Jugador jugador1(1, nom1, fichas1), jugador2(2, nom2, fichas2);
+//	Jugador jugador1(1, nom1, fichas1), jugador2(2, nom2, fichas2);
+	jugador1.setName(nom1);
+	jugador1.setFichas(fichas1);
+	jugador2.setName(nom2);
+	jugador2.setFichas(fichas2);
+
 	while(true){
-		if(turno == 1){
-			menuUsuario(jugador1, jugador2);
-			turno = 2;
-		} else {
-			menuUsuario(jugador2, jugador1);
-			turno = 1;
+		
+		if(turno%2 == 0){
+			menuUsuario(1);	
+		}else{
+			menuUsuario(2);
 		}
+		turno++;
 	}
 }
 
