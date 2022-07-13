@@ -40,6 +40,7 @@ void menu(){
 }
 
 void sacarLetras (int userId){
+	cout<<"**** Completaste una palabra ****"<<endl;
 	cout<<"Puedes sacar fichas de tu tablero o sacar del monton"<<endl;
 	cout<<"1- para sacar ficha por la izquierda"<<endl;
 	cout<<"2- para sacar ficha por la derecha"<<endl;
