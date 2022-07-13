@@ -39,6 +39,30 @@ void menu(){
 	}
 }
 
+void resetTablero(int num){
+	for(int i=0; i < 10 ; i++){
+		if(num == 1){eliminaDerBicola( &bicolaA );}
+		if(num == 2){eliminaDerBicola( &bicolaB );}	
+	}
+}
+void cargarFichas(){
+	int fichasAux[10];
+	int length1 = jugador1.fichasLongitud();
+	int length2 = jugador2.fichasLongitud();
+	if(length1 == 10 || length2 == 10){
+		for(int i=0;i<10;i++){
+			fichasAux[i] = sacarFicha();
+		}
+		
+		if(length1 == 10){
+			jugador1.setFichas(fichasAux);
+			resetTablero(1);
+		}else if(length2 == 10){
+			jugador2.setFichas(fichasAux);
+			resetTablero(2);
+		}
+	}
+}
 void sacarLetras (int userId){
 	cout<<"**** Completaste una palabra ****"<<endl;
 	cout<<"Puedes sacar fichas de tu tablero o sacar del monton"<<endl;
@@ -293,6 +317,7 @@ void Juego(){
 		}else{
 			menuUsuario(2);
 		}
+		cargarFichas();
 		turno++;
 	}
 }
