@@ -135,7 +135,7 @@ void insertDerBicola( struct BICOLA **bicola, int dato )
 
 
 // Elimina el primer Nodo:
-void eliminaIzqBicola( struct BICOLA **bicola )
+int eliminaIzqBicola( struct BICOLA **bicola )
 {
 	/*
 	Precondici�n:
@@ -156,8 +156,10 @@ void eliminaIzqBicola( struct BICOLA **bicola )
 	  // Si solo hay un Nodo en la Bicola, al liberar la RAM del Nodo se inicializa la Bicola a los valores por defecto:
 	else if( (*bicola)->nodos == 1)
 	{
+		aBorrar = (*bicola)->primero;
 		free(*bicola);
 		inicializarBicola( bicola );
+		return aBorrar->elemento.num;
 	}
 	  // En caso contrario se elimina solo el primer Nodo:
 	else if( (*bicola)->nodos > 1 )
@@ -170,13 +172,13 @@ void eliminaIzqBicola( struct BICOLA **bicola )
 
 		(*bicola)->nodos -= 1;
 	};
-
+		return aBorrar->elemento.num;
 };
 
 
 
 // Elimina el ultimo Nodo:
-void eliminaDerBicola( struct BICOLA **bicola )
+int eliminaDerBicola( struct BICOLA **bicola )
 {
 	/*
 	Precondici�n:
@@ -197,6 +199,7 @@ void eliminaDerBicola( struct BICOLA **bicola )
 	  // Si solo hay un Nodo en la Bicola, al liberar la RAM del Nodo se inicializa la Bicola a los valores por defecto:
 	else if( (*bicola)->nodos == 1 )
 	{
+		aBorrar = (*bicola)->ultimo;
 		free(*bicola);
 		inicializarBicola( bicola );
 	}
@@ -210,7 +213,7 @@ void eliminaDerBicola( struct BICOLA **bicola )
 
 		(*bicola)->nodos -= 1;
 	};
-
+	return aBorrar->elemento.num;
 };
 
 

@@ -53,6 +53,23 @@ class Jugador{
 				i++;
 			}
         }
+        int fichasLongitud () {
+        	int leng = 0;
+        	for (int i = 0; i < 10; i++){
+        		if(this->fichas[i] == 1){
+        			leng++;
+        		}
+			}
+			return leng;
+		}
+        void aniadirFicha(int letra){
+        	for(int i = 0; i < 10; i++){
+        		if(this->fichas[i] == 1){
+        			this->fichas[i] = letra;
+        			break;
+				}
+			}
+		}
         void addPuntos(int puntos){
         	this->puntos += puntos;
 		}

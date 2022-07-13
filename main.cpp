@@ -38,6 +38,65 @@ void menu(){
 		}
 	}
 }
+
+void sacarLetras (int userId){
+	cout<<"Puedes sacar fichas de tu tablero o sacar del monton"<<endl;
+	cout<<"1- para sacar ficha por la izquierda"<<endl;
+	cout<<"2- para sacar ficha por la derecha"<<endl;
+	cout<<"3- terminar de sacar fichas con el monton"<<endl;
+	bool ward = true;
+	int element;
+	while(ward){
+		if((userId == 1 && tieneNodosLaBicola ( &bicolaA ) == 0) || (userId == 2 && tieneNodosLaBicola ( &bicolaB ) == 0)) return;
+		if(kbhit()){
+			char key = getch();
+			switch(int(key)){
+				case 49:
+					if(userId == 1){
+						element = eliminaIzqBicola( &bicolaA );
+						jugador1.aniadirFicha(element);
+						cout<<"element"<<element;	
+					} else {
+						element = eliminaIzqBicola( &bicolaB );
+						jugador2.aniadirFicha(element);
+						cout<<"element"<<element;
+					}
+					break;
+				case 50:
+					if(userId == 1){
+						element = eliminaDerBicola( &bicolaA );
+						jugador1.aniadirFicha(element);
+						cout<<"element"<<element;	
+					} else {
+						element = eliminaDerBicola( &bicolaB );
+						jugador2.aniadirFicha(element);
+						cout<<"element"<<element;
+					}
+					break;
+				case 51:
+					if(userId == 1){
+						for(int i = 0; i <= jugador1.fichasLongitud(); i++){
+							jugador1.aniadirFicha(sacarFicha());
+							eliminaDerBicola( &bicolaA );
+						}
+					} else {
+						for(int i = 0; i < jugador2.fichasLongitud(); i++){
+							jugador2.aniadirFicha(sacarFicha());
+							eliminaDerBicola( &bicolaB );
+						}
+					}
+			}
+			if(!(userId == 1 && tieneNodosLaBicola ( &bicolaA ) == 0) || (userId == 2 && tieneNodosLaBicola ( &bicolaB ) == 0)){
+				cout<<"Puedes sacar fichas de tu tablero o sacar del monton"<<endl;
+				cout<<"1- para sacar ficha por la izquierda"<<endl;
+				cout<<"2- para sacar ficha por la derecha"<<endl;
+				cout<<"3- terminar de sacar fichas con el monton"<<endl;
+			}
+		}
+			
+	}
+}
+
 void comprobarLetras(){
 	Diccionario di;
 	vector<char> letrasA,letrasB;
@@ -60,8 +119,10 @@ void comprobarLetras(){
 	const char *palabraFinal2 = palabra2;
 	if(di.buscar(palabraFinal1)){
 		jugador1.addPuntos(letrasA.size());
+		sacarLetras(1);
 	}else if(di.buscar(palabraFinal2)){
 		jugador2.addPuntos(letrasB.size());
+		sacarLetras(2);
 	}
 	system("PAUSE");	
 }
@@ -76,18 +137,6 @@ void mostrarLetras(int * fichas){
 
 bool comprobarFichaDeUsuario (Jugador jugador, char letra){
 	int * fichas = jugador.getFichas();
-	int i=0;
-	bool confirmacion = true;
-	do{
-		if(fichas[i] != 1){
-			confirmacion = false;
-		}
-		i++;
-	}while(i < 10 && confirmacion);
-	
-	if(confirmacion == true){
-		
-	}
 	for(int i = 0; i < 10; i++){
 		if(char(fichas[i]) == letra){ // si existe en el mazo del usuario
 			return false;
